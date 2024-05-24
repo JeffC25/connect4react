@@ -108,6 +108,11 @@ function App() {
     setPlayer(player == 1 ? 2 : 1)
   }
 
+  const restart = () => {
+    setWinner(0);
+    setBoard(initialBoard);
+  }
+
   return (
     <div className="flex h-screen w-screen space-x-6 justify-center items-center p-20 bg-neutral-200">
       <div className="h-full w-fit flex flex-col justify-center">
@@ -129,7 +134,7 @@ function App() {
           }
         </div>
       <div className="flex justify-between pt-2">
-          <button className="p-2 bg-sky-500 rounded-md text-white hover:bg-sky-400 shadow-md">New Game</button>
+          <button onClick={restart} className="p-2 bg-sky-500 rounded-md text-white hover:bg-sky-400 shadow-md">New Game</button>
           <div className="p-2 font-semibold text-sky-600">{winner != 0 && `Winner: Player ${winner}`}</div>
       </div>  
       </div>
