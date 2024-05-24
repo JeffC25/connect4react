@@ -129,8 +129,8 @@ function App() {
           }
         </div>
       <div className="flex justify-between pt-2">
-          <button className="p-2 bg-cyan-500 rounded-md text-white hover:bg-cyan-400 shadow-md">New Game</button>
-          <div className="p-2 font-semibold text-cyan-600">{winner != 0 && `Winner: Player ${winner}`}</div>
+          <button className="p-2 bg-sky-500 rounded-md text-white hover:bg-sky-400 shadow-md">New Game</button>
+          <div className="p-2 font-semibold text-sky-600">{winner != 0 && `Winner: Player ${winner}`}</div>
       </div>  
       </div>
     </div>
