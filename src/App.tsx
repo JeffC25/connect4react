@@ -100,7 +100,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen space-x-6 justify-center items-center p-20 bg-neutral-200">
+    <div className="flex h-screen w-screen space-x-6 justify-center items-center sm:p-20 bg-neutral-200">
       <div className="h-full w-fit flex flex-col justify-center">
         <div className="grid grid-cols-7 p-2 bg-white rounded-lg shadow-md">
           {board.map(
@@ -112,7 +112,7 @@ function App() {
               >
                 {col.map(
                   (tile: number, rowIndex) => 
-                    <div key={rowIndex} className={`${colors[tile]} w-16 aspect-square rounded-full shadow-inner`}></div>
+                    <div key={rowIndex} className={`${colors[tile]} w-12 sm:w-16 aspect-square rounded-full shadow-inner`}></div>
                   )
                 } 
               </div>
