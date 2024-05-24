@@ -6,11 +6,6 @@ function App() {
     'bg-red-400',
     'bg-yellow-400',
   ]
-  // const colors = {
-  //   0: '',
-  //   1: 'bg-red-400',
-  //   2: 'bg-yello-400',
-  // }
   const initialBoard: number[][] = Array.from({ length: 7}, () => Array(6).fill(0));
   const [board, setBoard] = useState<number[][]>(initialBoard);
   const [player, setPlayer] = useState<number>(1)
@@ -50,11 +45,7 @@ function App() {
 
   const checkDiagonalUp = (newBoard: number[][], col: number, row: number) => {
     const offset = Math.min(5 - row, col);
-    // console.log(offset)
-    
     for (let counter = 0, r = row + offset, c = col - offset; r > 0 && c < 7; r--, c++) {
-      // console.log(c, r, newBoard[c][r])
-      // return false;
       if (newBoard[c][r] == player) {
         counter++;
       } else {
@@ -99,11 +90,6 @@ function App() {
     }
 
     setBoard(newBoard)
-    // console.table(newBoard)
-    // console.log(checkVertical(newBoard, col));
-    // console.log(checkHorizontal(newBoard, row));
-    // console.log(checkDiagonalUp(newBoard, col,row))
-    // console.log(checkDiagonalDown(newBoard, col,row))
 
     setPlayer(player == 1 ? 2 : 1)
   }
