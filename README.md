@@ -1,1 +1,1 @@
-# React + TypeScript + Vite + Tailwind
+i got really bored on a train ride
