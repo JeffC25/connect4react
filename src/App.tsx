@@ -6,15 +6,15 @@ function App() {
     'bg-red-400',
     'bg-yellow-400',
   ]
-  const initialBoard: number[][] = Array.from({ length: 7}, () => Array(6).fill(0));
+  const initialBoard: number[][] = Array.from({ length: 7 }, () => Array(6).fill(0));
   const [board, setBoard] = useState<number[][]>(initialBoard);
   const [player, setPlayer] = useState<number>(1)
   const [winner, setWinner] = useState<number>(0);
-  
+
   const getNextRow = (col: number) => {
     for (let row = 6; row >= 0; row--) {
       const tile = board[col][row];
-      if (tile == 0) return row; 
+      if (tile == 0) return row;
     }
     return -1;
   }
@@ -60,7 +60,7 @@ function App() {
     const offset = Math.min(row, col);
     for (let counter = 0, r = row - offset, c = col - offset; r < 6 && c < 7; r++, c++) {
       if (newBoard[c][r] == player) {
-        counter ++;
+        counter++;
       } else {
         counter = 0;
       }
@@ -81,10 +81,10 @@ function App() {
     newBoard[col][row] = player;
 
     if (
-      checkVertical(newBoard, col) || 
-      checkHorizontal(newBoard, row) || 
-      checkDiagonalUp(newBoard, col,row) || 
-      checkDiagonalDown(newBoard, col,row)
+      checkVertical(newBoard, col) ||
+      checkHorizontal(newBoard, row) ||
+      checkDiagonalUp(newBoard, col, row) ||
+      checkDiagonalDown(newBoard, col, row)
     ) {
       setWinner(player)
     }
@@ -104,25 +104,26 @@ function App() {
       <div className="h-full w-fit flex flex-col justify-center">
         <div className="grid grid-cols-7 p-2 bg-white rounded-lg shadow-md">
           {board.map(
-            (col, colIndex) => 
-              <div 
+            (col, colIndex) =>
+              <div
+                data-column-index={colIndex}
                 key={colIndex}
                 onClick={() => dropDisc(colIndex)}
                 className={`grid grid-rows-6 hover:bg-sky-400 p-2 gap-2 rounded-md`}
               >
                 {col.map(
-                  (tile: number, rowIndex) => 
-                    <div key={rowIndex} className={`${colors[tile]} w-12 sm:w-16 aspect-square rounded-full shadow-inner`}></div>
-                  )
-                } 
+                  (tile: number, rowIndex) =>
+                    <div data-row-index={rowIndex} key={rowIndex} className={`${colors[tile]} w-12 sm:w-16 aspect-square rounded-full shadow-inner`}></div>
+                )
+                }
               </div>
-            )
+          )
           }
         </div>
-      <div className="flex justify-between pt-2">
+        <div className="flex justify-between pt-2">
           <button onClick={restart} className="p-2 bg-sky-500 rounded-md text-white hover:bg-sky-400 shadow-md">New Game</button>
           <div className="p-2 font-semibold text-sky-600">{winner != 0 && `Winner: Player ${winner}`}</div>
-      </div>  
+        </div>
       </div>
     </div>
   )
