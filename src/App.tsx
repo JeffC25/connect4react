@@ -1,25 +1,34 @@
 import { useState } from "react"
 
+enum Player {
+  P1 = "Player 1",
+  P2 = "Player 2"
+}
+
+const getPlayerColor = (tile: (Player | null)): String => {
+  switch (tile) {
+    case Player.P1: return 'bg-red-400'
+    case Player.P2: return 'bg-yellow-400'
+    case null: return 'bg-neutral-300'
+  }
+}
+
 function App() {
-  const colors = [
-    'bg-neutral-300',
-    'bg-red-400',
-    'bg-yellow-400',
-  ]
-  const initialBoard: number[][] = Array.from({ length: 7}, () => Array(6).fill(0));
-  const [board, setBoard] = useState<number[][]>(initialBoard);
-  const [player, setPlayer] = useState<number>(1)
-  const [winner, setWinner] = useState<number>(0);
-  
-  const getNextRow = (col: number) => {
-    for (let row = 6; row >= 0; row--) {
+
+  const initialBoard: (Player | null)[][] = Array.from({ length: 7 }, () => Array(6).fill(null));
+  const [board, setBoard] = useState<(Player | null)[][]>(initialBoard);
+  const [player, setPlayer] = useState<(Player | null)>(Player.P1)
+  const [winner, setWinner] = useState<(Player | null)>(null);
+
+  const getNextRow = (col: number): (number | null) => {
+    for (let row = 5; row >= 0; row--) {
       const tile = board[col][row];
-      if (tile == 0) return row; 
+      if (tile == null) return row;
     }
-    return -1;
+    return null;
   }
 
-  const checkHorizontal = (newBoard: number[][], row: number) => {
+  const checkHorizontal = (newBoard: (Player | null)[][], row: number): Boolean => {
     for (let counter = 0, col = 0; col < 7; col++) {
       if (newBoard[col][row] == player) {
         counter++;
@@ -31,7 +40,7 @@ function App() {
     return false;
   }
 
-  const checkVertical = (newBoard: number[][], col: number) => {
+  const checkVertical = (newBoard: (Player | null)[][], col: number): Boolean => {
     for (let counter = 0, row = 0; row < 6; row++) {
       if (newBoard[col][row] == player) {
         counter++;
@@ -43,7 +52,7 @@ function App() {
     return false;
   }
 
-  const checkDiagonalUp = (newBoard: number[][], col: number, row: number) => {
+  const checkDiagonalUp = (newBoard: (Player | null)[][], col: number, row: number): Boolean => {
     const offset = Math.min(5 - row, col);
     for (let counter = 0, r = row + offset, c = col - offset; r > 0 && c < 7; r--, c++) {
       if (newBoard[c][r] == player) {
@@ -56,11 +65,11 @@ function App() {
     return false;
   }
 
-  const checkDiagonalDown = (newBoard: number[][], col: number, row: number) => {
+  const checkDiagonalDown = (newBoard: (Player | null)[][], col: number, row: number): Boolean => {
     const offset = Math.min(row, col);
     for (let counter = 0, r = row - offset, c = col - offset; r < 6 && c < 7; r++, c++) {
       if (newBoard[c][r] == player) {
-        counter ++;
+        counter++;
       } else {
         counter = 0;
       }
@@ -70,32 +79,37 @@ function App() {
   }
 
 
-  const dropDisc = (col: number) => {
-    if (winner != 0) {
-      return;
-    }
+  const playTurn = (col: number) => {
+    if (winner != null) { return }
 
     const row = getNextRow(col);
+    if (row == null) {
+      return
+    }
+    console.log(`Dropping disc: column ${col}, row ${row}`)
 
     let newBoard = board.map((e) => e.slice());
     newBoard[col][row] = player;
+    console.log(newBoard)
 
     if (
-      checkVertical(newBoard, col) || 
-      checkHorizontal(newBoard, row) || 
-      checkDiagonalUp(newBoard, col,row) || 
-      checkDiagonalDown(newBoard, col,row)
+      checkVertical(newBoard, col) ||
+      checkHorizontal(newBoard, row) ||
+      checkDiagonalUp(newBoard, col, row) ||
+      checkDiagonalDown(newBoard, col, row)
     ) {
       setWinner(player)
+      console.log(`Winner: ${player}`)
     }
 
     setBoard(newBoard)
 
-    setPlayer(player == 1 ? 2 : 1)
+    setPlayer(player == Player.P1 ? Player.P2 : Player.P1)
+    console.log(`${player}'s turn`)
   }
 
   const restart = () => {
-    setWinner(0);
+    setWinner(null);
     setBoard(initialBoard);
   }
 
@@ -103,26 +117,26 @@ function App() {
     <div className="flex h-screen w-screen space-x-6 justify-center items-center sm:p-20 bg-neutral-200">
       <div className="h-full w-fit flex flex-col justify-center">
         <div className="grid grid-cols-7 p-2 bg-white rounded-lg shadow-md">
-          {board.map(
-            (col, colIndex) => 
-              <div 
-                key={colIndex}
-                onClick={() => dropDisc(colIndex)}
-                className={`grid grid-rows-6 hover:bg-sky-400 p-2 gap-2 rounded-md`}
-              >
-                {col.map(
-                  (tile: number, rowIndex) => 
-                    <div key={rowIndex} className={`${colors[tile]} w-12 sm:w-16 aspect-square rounded-full shadow-inner`}></div>
-                  )
-                } 
-              </div>
+          {board.
+            map(
+              (col, colIndex) =>
+                <div
+                  key={colIndex}
+                  onClick={() => playTurn(colIndex)}
+                  className={`grid grid-rows-6 hover:bg-sky-400 p-2 gap-2 rounded-md`}
+                >
+                  {col.map(
+                    (tile: (Player | null), rowIndex) =>
+                      <div key={rowIndex} className={`w-12 sm:w-16 aspect-square rounded-full shadow-inner ${getPlayerColor(tile)}`}></div>
+                  )}
+                </div>
             )
           }
         </div>
-      <div className="flex justify-between pt-2">
+        <div className="flex justify-between pt-2">
           <button onClick={restart} className="p-2 bg-sky-500 rounded-md text-white hover:bg-sky-400 shadow-md">New Game</button>
-          <div className="p-2 font-semibold text-sky-600">{winner != 0 && `Winner: Player ${winner}`}</div>
-      </div>  
+          <div className="p-2 font-semibold text-sky-600">{winner != null && `Winner: ${winner}`}</div>
+        </div>
       </div>
     </div>
   )
