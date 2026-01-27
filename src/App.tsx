@@ -126,8 +126,8 @@ function App() {
                   className={`grid grid-rows-6 hover:bg-sky-400 p-2 gap-2 rounded-md`}
                 >
                   {col.map(
-                    (tile: (Player | null), rowIndex) =>
-                      <div key={rowIndex} className={`w-12 sm:w-16 aspect-square rounded-full shadow-inner ${getPlayerColor(tile)}`}></div>
+                    (disc: (Player | null), rowIndex) =>
+                      <div key={rowIndex} className={`w-12 sm:w-16 aspect-square rounded-full shadow-inner ${getPlayerColor(disc)}`}></div>
                   )}
                 </div>
             )
